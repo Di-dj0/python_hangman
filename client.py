@@ -99,12 +99,19 @@ def main():
         tamPalavra = int.from_bytes(tamPalavra, 'big')
         palavra = jogador.recv(tamPalavra)
         palavra = palavra.decode()
+        tamTipo = jogador.recv(1)
+        tamTipo = int.from_bytes(tamTipo, 'big')
+        tipo = jogador.recv(tamTipo)
+        tipo = tipo.decode()
+
     else:
         sys.exit(-2)
 
     forca = main_game(palavra)
 
     encerrado = forca.fim_do_jogo
+
+    print("A palavra é do tipo: " + tipo)
 
     while not encerrado:
         cls()

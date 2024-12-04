@@ -1,8 +1,24 @@
 import socket
 import sys
 import os
+import pandas as pd
+import random
 
 from sympy import false
+
+def escolha_arquivo(path):
+    all_files = os.listdir(path)
+    palavras_files = [file for file in all_files if file.endswith('.csv')]
+    selected_file = random.choice(palavras_files)
+    lista_path = os.path.join(path, selected_file)
+    return lista_path
+
+def random_palavra(path, tipo):
+    palavras = pd.read_csv(path)
+    palavras = palavras[tipo]
+    palavras = palavras.to_list()
+    palavra = random.choice(palavras)
+    return palavra
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -83,6 +99,20 @@ class main_game:
 
 
 def main():
+
+    palavras_path = r"..\python_hangman\palavras"
+    path = escolha_arquivo(palavras_path)
+
+    # Divide a extensão do arquivo para pegar o tipo da palavra
+    tipo_palavra = os.path.basename(path)
+    tipo, _ = os.path.splitext(tipo_palavra)
+    tam_tipo = len(tipo)
+
+    palavra = random_palavra(path, tipo)
+    palavra = palavra.upper()
+
+    print(palavra)
+
     cls()
     socketConexao = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     endereco = ('127.0.0.1', 50000)
@@ -91,14 +121,18 @@ def main():
 
     [jogador, _] = socketConexao.accept()
 
-    forca = main_game("BATATA")
+    forca = main_game(palavra)
     # Servidor tem que enviar palavra para o cliente para que o jogo inicie
     msg = 'P'.encode()
     msg += forca.tamanho_original.to_bytes(1, byteorder='big')
     msg += forca.palavra.encode()
+    msg += tam_tipo.to_bytes(1, byteorder='big')
+    msg += tipo.encode()
     jogador.send(msg)
 
     encerrado = forca.fim_do_jogo
+
+    print("A palavra é do tipo: " + tipo)
 
     while not encerrado:
         # Servidor começa jogando (Tentar implementar início random depois)
