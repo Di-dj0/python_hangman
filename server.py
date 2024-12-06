@@ -100,7 +100,7 @@ class main_game:
 
 def main():
 
-    palavras_path = r"..\python_hangman\palavras"
+    palavras_path = r".\\palavras"
     path = escolha_arquivo(palavras_path)
 
     # Divide a extensão do arquivo para pegar o tipo da palavra
@@ -211,6 +211,9 @@ def main():
                 print('Seu oponente acertou a palavra!')
                 print('A palavra era: ' + forca.palavra)
                 exit(1)
+            elif codigo == 'M':
+                cls()
+                print('Seu oponente errou a palavra!')
             else:
                 print('Erro')
                 sys.exit(-2)

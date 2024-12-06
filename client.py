@@ -138,6 +138,9 @@ def main():
             print('Seu oponente acertou a palavra!')
             print('A palavra era: ' + forca.palavra)
             exit(1)
+        elif codigo == 'M':
+            cls()
+            print('Seu oponente errou a palavra!')
         else:
             print('Erro')
             sys.exit(-2)
